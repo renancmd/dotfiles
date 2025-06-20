@@ -96,6 +96,17 @@ window#waybar {
   padding: 0 10px;
 }
 
+#custom-poweroff,
+#custom-reboot {
+  color: #fff;
+  padding: 0 10px;
+  transition: background 0.2s, color 0.2s;
+}
+
+#custom-poweroff {
+  font-size: 1.6em;
+}
+
 /* #custom-lock{
     color: goldenrod;
     font-size: 1.2em;

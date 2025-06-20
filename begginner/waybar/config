@@ -18,7 +18,9 @@
     "bluetooth",
     "pulseaudio",
     "battery",
-    "custom/lock"
+    "custom/lock",
+    "custom/reboot",
+    "custom/poweroff"
   ],
   "reload_style_on_change": true,
   "custom/lock": {
@@ -140,5 +142,13 @@
     "format-critical": " {temperatureC}°C",
     "interval": 1,
     "critical-threshold": 80
+  },
+  "custom/poweroff": {
+    "format": "⏻",
+    "on-click": "systemctl poweroff"
+  },
+  "custom/reboot": {
+    "format": "",
+    "on-click": "systemctl reboot"
   }
 }
