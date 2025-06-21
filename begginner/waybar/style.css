@@ -1,7 +1,7 @@
 * {
     border: none;
     font-size: 14px;
-    font-family: "JetBrainsMono Nerd Font,JetBrainsMono NF" ;
+    font-family: "RobotoMono Nerd Font" ;
     min-height: 25px;
 }
 
@@ -103,9 +103,9 @@ window#waybar {
   transition: background 0.2s, color 0.2s;
 }
 
-#custom-poweroff {
+/* #custom-poweroff {
   font-size: 1.6em;
-}
+} */
 
 /* #custom-lock{
     color: goldenrod;
