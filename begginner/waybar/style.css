@@ -103,9 +103,9 @@ window#waybar {
   transition: background 0.2s, color 0.2s;
 }
 
-/* #custom-poweroff {
+#custom-poweroff {
   font-size: 1.6em;
-} */
+}
 
 /* #custom-lock{
     color: goldenrod;

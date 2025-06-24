@@ -1,0 +1,13 @@
+hyprland
+hyprpaper
+hyprlock
+nwg-look
+rofi
+wofi
+nvim
+nautilus
+kitty
+neofetch
+waybar
+dracula-gtk-theme
+tela-circle-icon-theme-dracula
