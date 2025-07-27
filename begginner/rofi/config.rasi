@@ -1,16 +1,115 @@
-configuration{
-    modi: "run,window,combi";
-    icon-theme: "Oranchelo";
-    show-icons: true;
-    terminal: "alacritty";
+configuration {
+    display-drun: "Applications:";
+    display-window: "Windows:";
     drun-display-format: "{icon} {name}";
-    location: 0;
-    disable-history: false;
-    hide-scrollbar: true;
-    display-combi: " 🖥️  All ";
-    display-run: " 🏃  Run ";
-    display-window: " 🪟  Window";
-    sidebar-mode: true;
+    run-command-format: "{cmd}"; // Adicionado: Formato para comandos no modo 'run'
+    font: "JetBrainsMono Nerd Font Medium 10";
+    modi: "window,run,drun";
+    show-icons: true;
+    icon-theme: "Tela-circle-dracula";
+    lines: 10; // Adicionado: Limita a 10 linhas visíveis
+    fixed-num-lines: true; // Adicionado: Mantém o tamanho da janela fixo
 }
 
-@theme "catppuccin-mocha"
+@theme "/dev/null"
+
+* {
+    bg: #11121D;
+    bg-alt: #444b6a;
+    color: #fff;
+
+    fg: #FFFFFF;
+    fg-alt: #787c99;
+
+    selected-bg: @bg-alt;
+    selected-fg: @fg;
+    urgent-bg: #e06c75;
+    active-bg: #98c379;
+
+    background-color: @bg;
+
+    border: 0;
+    margin: 0;
+    padding: 0;
+    spacing: 0;
+}
+
+window {
+    width: 45%;
+    border-radius: 8px;
+    background-color: @bg;
+}
+
+inputbar {
+    padding: 12px;
+    background-color: @bg;
+    border-radius: 8px;
+    children: [ prompt, entry ];
+}
+
+prompt {
+    enabled: true;
+    padding: 0 10px 0 0;
+    background-color: @bg;
+    text-color: @fg-alt;
+}
+
+entry {
+    placeholder: "Buscar...";
+    text-color: @fg;
+    highlight: underline bold;
+}
+
+
+listview {
+    spacing: 0px;
+    scrollbar: true;
+    background-color: @bg;
+}
+
+element {
+    padding: 12;
+    border-radius: 4px;
+    text-color: @fg;
+}
+
+element normal.normal {
+    background-color: @bg;
+    text-color: @fg;
+}
+
+element selected.normal {
+    background-color: @selected-bg;
+    text-color: @selected-fg;
+}
+
+element selected.urgent {
+    background-color: @urgent-bg;
+    text-color: @selected-fg;
+}
+
+element selected.active {
+    background-color: @active-bg;
+    text-color: @selected-fg;
+}
+
+element-text {
+    background-color: transparent;
+    text-color: inherit;
+    vertical-align: 0.5; // Alinha o texto verticalmente no meio do ícone
+}
+
+element-icon {
+    background-color: transparent;
+    size: 1em; // Tamanho do ícone (ajuste se precisar)
+    vertical-align: 0.5; // Alinha o ícone verticalmente no meio do texto
+}
+
+scrollbar {
+    width: 4px;
+    border: 0;
+    handle-width: 8px;
+    padding: 0;
+    background-color: @bg;
+    handle-color: @fg-alt;
+}
