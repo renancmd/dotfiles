@@ -8,4 +8,10 @@ vim.opt.number = true
 vim.g.mapleader = " "
 vim.keymap.set("n", "<leader>i", "gg=G", { noremap = true, silent = true})
 vim.keymap.set('n', '<leader>1', '0', { noremap = true, silent = true })
+vim.keymap.set('v', '<leader>1', '0', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>2', '$l', { noremap = true, silent = true })
+vim.keymap.set('v', '<leader>2', '$l', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>3', 'G', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>w', ':w<CR>')
+vim.keymap.set('n', '<leader>q', ':qa<CR>')
+vim.keymap.set('n', '<leader>ya', ':%y+<CR>')
