@@ -98,7 +98,7 @@ return {
             action = "ene | startinsert",
           },
           {
-            icon = "  ",
+            icon = "  ",
             desc = "Recent files",
             key = "r",
             action = "Telescope oldfiles",
