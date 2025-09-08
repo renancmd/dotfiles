@@ -1,11 +1,21 @@
-return  { 
-  "catppuccin/nvim",
-  name = "catppuccin", 
+return {
+  "folke/tokyonight.nvim",
+  lazy = false,
   priority = 1000,
-  config = function()
-    vim.cmd("colorscheme catppuccin")
+  config = function ()
+    vim.cmd[[colorscheme tokyonight-moon]]
   end
 }
+
+-- return  { 
+--   "catppuccin/nvim",
+--   name = "catppuccin", 
+--   priority = 1000,
+--   config = function()
+--     vim.cmd("colorscheme catppuccin")
+--   end
+-- }
+
 --return {
 --"rose-pine/neovim",
 --name = "rose-pine",
