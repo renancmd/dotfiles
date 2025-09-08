@@ -76,7 +76,7 @@ local function merge_ascii(a, b)
 end
 
 -- Aqui você combina as que quiser
-local combo = merge_ascii(neovim, charizard)
+local combo = merge_ascii(neovim, hydra)
 
 return {
   "nvimdev/dashboard-nvim",
