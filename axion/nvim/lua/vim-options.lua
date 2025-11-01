@@ -15,3 +15,8 @@ vim.keymap.set('n', '<leader>3', 'G', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>w', ':w<CR>')
 vim.keymap.set('n', '<leader>q', ':qa<CR>')
 vim.keymap.set('n', '<leader>ya', ':%y+<CR>')
+
+vim.cmd('command! RunC !gcc % -o %:r && %:r')
+vim.cmd('command! RunJava !javac % && java %')
+
+

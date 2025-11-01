@@ -15,7 +15,6 @@
   ],
   "modules-right": [
     "network",
-    "bluetooth",
     "pulseaudio",
     "battery",
     "custom/lock",
