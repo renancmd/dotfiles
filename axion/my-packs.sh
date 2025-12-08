@@ -1,1 +1,0 @@
-yay -S hyprland hyprlock hyprpaper hyprpolkitagent sddm man tldr thunar python3 7zip default-jdk nvim qemu-full waybar rofi wofi neofetch firefox kitty ttf-jetbrains-mono-nerd openssh stow --noconfirm
