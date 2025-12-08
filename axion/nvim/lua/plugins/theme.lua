@@ -7,43 +7,30 @@
 --   end
 -- }
 
-return {
-  "tiesen243/vercel.nvim",
-  lazy = false,
-  priority = 1000,
-  config = function()
-    require("vercel").setup({
-      theme = "dark",
-      transparent = false,
-    })
-    vim.cmd.colorscheme("vercel")
-  end,
-}
-
 -- return {
---   "Mofiqul/dracula.nvim",
+--   "tiesen243/vercel.nvim",
 --   lazy = false,
 --   priority = 1000,
 --   config = function()
---       require("dracula").setup({
---       transparent = false
+--     require("vercel").setup({
+--       theme = "light",
+--       transparent = false,
 --     })
---     vim.cmd.colorscheme("dracula")
+--     vim.cmd.colorscheme("vercel")
 --   end,
 -- }
 
---   return {
---     -- add dracula
---     { "Mofiqul/dracula.nvim" },
---
---   -- Configure LazyVim to load dracula
---   {
---     "LazyVim/LazyVim",
---     opts = {
---       colorscheme = "dracula",
--- },
--- },
--- }
+return {
+  "Mofiqul/dracula.nvim",
+  lazy = false,
+  priority = 1000,
+  config = function()
+      require("dracula").setup({
+      transparent = false
+    })
+    vim.cmd.colorscheme("dracula")
+  end,
+}
 
 -- return  { 
 --   "catppuccin/nvim",

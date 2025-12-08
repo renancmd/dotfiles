@@ -8,8 +8,9 @@ return  {
   },
   config = function()
     vim.keymap.set('n', '<leader>o', ':Neotree reveal left<CR>', {})
+    vim.keymap.set('n', '<leader><S-o>', ':Neotree source=filesystem position=left action=close<CR>', {})
 
-     require("neo-tree").setup({
+    require("neo-tree").setup({
       filesystem = {
         filtered_items = {
           visible = true,
