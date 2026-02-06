@@ -7,6 +7,17 @@
 --   end
 -- }
 
+return {
+    "tiagovla/tokyodark.nvim",
+    opts = {
+        -- custom options here
+    },
+    config = function(_, opts)
+        require("tokyodark").setup(opts) -- calling setup is optional
+        vim.cmd [[colorscheme tokyodark]]
+    end,
+}
+
 -- return {
 --   "tiesen243/vercel.nvim",
 --   lazy = false,
@@ -20,17 +31,17 @@
 --   end,
 -- }
 
-return {
-  "Mofiqul/dracula.nvim",
-  lazy = false,
-  priority = 1000,
-  config = function()
-      require("dracula").setup({
-      transparent = false
-    })
-    vim.cmd.colorscheme("dracula")
-  end,
-}
+-- return {
+--   "Mofiqul/dracula.nvim",
+--   lazy = false,
+--   priority = 1000,
+--   config = function()
+--       require("dracula").setup({
+--       transparent = false
+--     })
+--     vim.cmd.colorscheme("dracula")
+--   end,
+-- }
 
 -- return  { 
 --   "catppuccin/nvim",
