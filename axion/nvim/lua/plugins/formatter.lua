@@ -13,7 +13,7 @@ return {
     c = { "clang_format" },
     cpp = { "clang_format" },
 
-    java = { "google_java_format" },
+    java = { "google-java-format" },
 
     go = { "goimports", "gofmt" },
 

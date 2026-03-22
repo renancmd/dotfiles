@@ -1,0 +1,89 @@
+[
+    {
+        // --- Global / Default Bindings ---
+        "bindings": {
+            // Basic Typing & Navigation
+            "backspace": "editor::Backspace",
+            "delete": "editor::Delete",
+            "tab": "editor::Tab",
+
+            // Clipboard
+            "ctrl-c": "editor::Copy",
+            "ctrl-v": "editor::Paste",
+            "ctrl-x": "editor::Cut",
+
+            // History
+            "ctrl-z": "editor::Undo",
+            "ctrl-shift-x": "editor::Redo",
+
+            // Selection & Saving
+            "ctrl-a": "editor::SelectAll",
+            "ctrl-d": "editor::SelectNext",
+            "ctrl-s": "workspace::Save",
+
+            // Basic Movement
+            "left": "editor::MoveLeft",
+            "right": "editor::MoveRight",
+            "up": "editor::MoveUp",
+            "down": "editor::MoveDown",
+
+            // UI Toggles & Navigation
+            "ctrl-shift-p": "command_palette::Toggle",
+            "ctrl-enter": "terminal_panel::Toggle",
+            "ctrl-o": "project_panel::Toggle",
+            "ctrl-i": "agent::Toggle",
+            "ctrl-e": "file_finder::Toggle",
+
+            // Search & Formatting
+            "ctrl-r": "buffer_search::Deploy",
+            "escape": "buffer_search::Dismiss",
+            "ctrl-shift-i": "editor::Format",
+
+            // Workspace
+            "ctrl-c ctrl-d": "workspace::Open",
+        },
+    },
+
+    // --- AI / Agent Workflows ---
+    {
+        "context": "AcpThread > (Editor && !use_modifier_to_send)",
+        "bindings": {
+            "ctrl-enter": "agent::Chat",
+        },
+    },
+    {
+        "context": "Picker > Editor",
+        "bindings": {
+            "tab": "picker::ConfirmCompletion",
+        },
+    },
+    {
+        "context": "VariableList",
+        "bindings": {
+            "enter": "variable_list::EditVariable"
+        }
+    },
+    {
+        "context": "ContextEditor > Editor",
+        "bindings": {
+            "enter": "assistant::ConfirmCommand"
+        }
+    },
+    {
+        "bindings": {
+            "enter": "menu::Confirm"
+        }
+    },
+    {
+        "context": "AcpThread > (Editor && use_modifier_to_send)",
+        "bindings": {
+            "enter": "editor::Newline"
+        }
+    },
+    {
+        "context": "Editor && mode == full",
+        "bindings": {
+            "enter": "editor::Newline"
+        }
+    }
+]
