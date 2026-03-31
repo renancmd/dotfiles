@@ -1,0 +1,2 @@
+hyprctl reload -> reload hyprland config manually
+hyprctl monitors all -> list all availables monitors (active and inactive)
