@@ -1,7 +1,7 @@
+vim.g.mapleader = " "
 local map = vim.keymap.set
 
 -- Leader key (space)
-vim.g.mapleader = " "
 
 -- Moves
 map({ "n", "v" }, "<leader>1", "0", { desc = "Go to the beggining of the line" })
@@ -45,8 +45,8 @@ map("n", "<leader>r", builtin.live_grep, { desc = "Telescope live grep" })
 map(
 	"n",
 	"<leader>o",
-	":Neotree source=filesystem reveal=true position=left<cr>",
-	{ desc = "Open the project filesystem on left side" }
+	":Neotree source=filesystem reveal=true position=right<cr>",
+	{ desc = "Open the project filesystem on right side" }
 )
 map("n", "<leader>p", ":Neotree action=close<cr>", { desc = "Close the project filesystem" })
 

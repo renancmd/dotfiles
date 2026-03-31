@@ -1,4 +1,5 @@
 -- Lazy installation path
+vim.g.mapleader = " "
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 -- If not exist, clone the lazy rep

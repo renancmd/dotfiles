@@ -1,5 +1,7 @@
 {
     // --- UI & Theme ---
+    "use_system_path_prompts": false,
+    "vim_mode": false,
     "theme": "Tokyo Night",
     "experimental.theme_overrides": {
         "background.appearance": "blurred",
