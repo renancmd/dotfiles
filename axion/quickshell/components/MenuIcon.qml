@@ -1,43 +1,28 @@
 import QtQuick
 
-Rectangle {
+Item {
+  id: menuBtn
 
-  width: 32
+  implicitWidth: 30
+  implicitHeight: 26
 
-  height: 26
-
-  color: "#313244"
-
-  radius: 6
-
+  scale: hoverArea.pressed ? 0.92 : 1.0
+  Behavior on scale { NumberAnimation { duration: 100; easing.type: Easing.OutCubic } }
 
   Text {
-
     text: "󰍜"
-
-    color: "#cdd6f4"
-
+    color: hoverArea.containsMouse ? "#89b4fa" : "#cdd6f4"
     font.pixelSize: 16
-
     anchors.centerIn: parent
 
+    Behavior on color { ColorAnimation { duration: 150 } }
   }
-
 
   MouseArea {
-
+    id: hoverArea
     anchors.fill: parent
-
+    hoverEnabled: true
     cursorShape: Qt.PointingHandCursor
-
-    onClicked: {
-
-
-
-      sysMenuPopup.visible = !sysMenuPopup.visible
-
-    }
-
+    onClicked: sysMenuPopup.visible = !sysMenuPopup.visible
   }
-
-} 
+}

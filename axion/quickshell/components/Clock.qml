@@ -3,8 +3,10 @@ import QtQuick
 Text {
     id: timeText
     color: "#cdd6f4"
+    font.family: "Roboto"
     font.pixelSize: 14
-    font.bold: true
+    font.weight: Font.DemiBold
+    font.letterSpacing: 0.3
     anchors.verticalCenter: parent.verticalCenter
 
     Timer {

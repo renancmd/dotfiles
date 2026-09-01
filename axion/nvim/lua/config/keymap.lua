@@ -65,3 +65,7 @@ map('n', '<A-7>', '<Cmd>BufferGoto 7<CR>')
 map('n', '<A-8>', '<Cmd>BufferGoto 8<CR>')
 map('n', '<A-9>', '<Cmd>BufferGoto 9<CR>')
 map('n', '<A-0>', '<Cmd>BufferLast<CR>')
+
+
+-- Formatter
+map('n', '<leader>f', vim.lsp.buf.format, { desc = "Formatar arquivo com LSP" })

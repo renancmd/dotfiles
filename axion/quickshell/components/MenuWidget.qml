@@ -2,16 +2,31 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
+import Qt5Compat.GraphicalEffects
 
 Rectangle {
     id: menuRoot
     width: 340
     // Dynamically size height based on contents
     height: mainLayout.implicitHeight + 32
-    color: "#1e1e2e"
-    radius: 12
+    radius: 16
     border.color: "#313244"
     border.width: 1
+
+    gradient: Gradient {
+        GradientStop { position: 0.0; color: "#1e1e2e" }
+        GradientStop { position: 1.0; color: "#181825" }
+    }
+
+    layer.enabled: true
+    layer.effect: DropShadow {
+        transparentBorder: true
+        horizontalOffset: 0
+        verticalOffset: 8
+        radius: 22
+        samples: 45
+        color: "#80000000"
+    }
 
     // Sinal para solicitar o fechamento ao elemento pai
     signal closeRequested
@@ -50,11 +65,29 @@ Rectangle {
                 border.width: 2
                 clip: true
 
+                Image {
+                    id: avatarImage
+                    anchors.fill: parent
+                    source: Qt.resolvedUrl("../avatar.png")
+                    fillMode: Image.PreserveAspectCrop
+                    visible: status === Image.Ready
+                    asynchronous: true
+                    layer.enabled: true
+                    layer.effect: OpacityMask {
+                        maskSource: Rectangle {
+                            width: avatarImage.width
+                            height: avatarImage.height
+                            radius: width / 2
+                        }
+                    }
+                }
+
                 Text {
                     anchors.centerIn: parent
-                    text: "󰣇" // Arch icon as default avatar
+                    text: "󰣇" // Arch icon fallback avatar
                     color: "#89b4fa"
                     font.pixelSize: 32
+                    visible: avatarImage.status !== Image.Ready
                 }
             }
 
@@ -82,7 +115,9 @@ Rectangle {
             Process {
                 command: ["whoami"]
                 running: true
-                onExited: usernameText.text = stdout ? "@" + String(stdout).trim() : "@user"
+                stdout: StdioCollector {
+                    onStreamFinished: usernameText.text = text ? "@" + text.trim() : "@user"
+                }
             }
 
             // Fetch Uptime periodically
@@ -90,7 +125,10 @@ Rectangle {
                 id: uptimeCmd
                 command: ["uptime", "-p"]
                 running: true
-                onExited: uptimeText.text = stdout ? String(stdout).trim() : "uptime unknown"
+                stdout: StdioCollector {
+                    id: uptimeCollector
+                    onStreamFinished: uptimeText.text = text ? text.trim() : "uptime unknown"
+                }
             }
             Timer {
                 interval: 60000 // Update uptime every minute
@@ -101,6 +139,12 @@ Rectangle {
                     uptimeCmd.running = true;
                 }
             }
+        }
+
+        Rectangle {
+            Layout.fillWidth: true
+            height: 1
+            color: "#313244"
         }
 
         // ==========================================
@@ -115,14 +159,17 @@ Rectangle {
                 id: bigClockText
                 Layout.alignment: Qt.AlignHCenter
                 color: "#cdd6f4"
+                font.family: "Roboto"
                 font.pixelSize: 36
                 font.bold: true
+                font.letterSpacing: 0.5
             }
 
             Text {
                 id: dateText
                 Layout.alignment: Qt.AlignHCenter
                 color: "#a6adc8"
+                font.family: "Roboto"
                 font.pixelSize: 14
                 font.weight: Font.Medium
             }
@@ -142,6 +189,12 @@ Rectangle {
                     dateText.text = Qt.formatDateTime(now, "MM/dd/yyyy, dddd");
                 }
             }
+        }
+
+        Rectangle {
+            Layout.fillWidth: true
+            height: 1
+            color: "#313244"
         }
 
         // ==========================================
@@ -174,21 +227,27 @@ Rectangle {
             Process {
                 id: cpuCmd
                 command: ["sh", "-c", "top -bn1 | grep 'Cpu(s)' | sed 's/.*, *\\([0-9.]*\\)%* id.*/\\1/' | awk '{print 100 - $1}'"]
-                onExited: cpuBar.value = stdout ? parseFloat(String(stdout).trim()) : 0
+                stdout: StdioCollector {
+                    onStreamFinished: cpuBar.value = text ? parseFloat(text.trim()) : 0
+                }
             }
 
             // RAM: Uses free to calculate used memory percentage
             Process {
                 id: ramCmd
                 command: ["sh", "-c", "free -m | awk 'NR==2{printf \"%.0f\", $3*100/$2 }'"]
-                onExited: ramBar.value = stdout ? parseFloat(String(stdout).trim()) : 0
+                stdout: StdioCollector {
+                    onStreamFinished: ramBar.value = text ? parseFloat(text.trim()) : 0
+                }
             }
 
             // DISK: Uses df to get the root partition capacity percentage
             Process {
                 id: diskCmd
                 command: ["sh", "-c", "df -h / | awk '$NF==\"/\"{printf \"%s\", $5}' | tr -d '%'"]
-                onExited: diskBar.value = stdout ? parseFloat(String(stdout).trim()) : 0
+                stdout: StdioCollector {
+                    onStreamFinished: diskBar.value = text ? parseFloat(text.trim()) : 0
+                }
             }
 
             // Refresh Stats every 3 seconds

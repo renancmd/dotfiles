@@ -1,16 +1,27 @@
 import QtQuick
 import "../services"
 
-Row {
-    spacing: 6
-    anchors.verticalCenter: parent.verticalCenter
+Item {
+    id: netRoot
+    implicitWidth: netText.implicitWidth
+    implicitHeight: netText.implicitHeight
 
     NetworkService { id: netService }
 
     Text {
+        id: netText
+        anchors.centerIn: parent
         text: netService.networkIcon
-        color: "#cdd6f4"
+        color: hoverArea.containsMouse ? "#ffffff" : "#cdd6f4"
         font.pixelSize: 16
-        anchors.verticalCenter: parent.verticalCenter
+
+        Behavior on color { ColorAnimation { duration: 150 } }
+    }
+
+    MouseArea {
+        id: hoverArea
+        anchors.fill: parent
+        hoverEnabled: true
+        cursorShape: Qt.PointingHandCursor
     }
 }

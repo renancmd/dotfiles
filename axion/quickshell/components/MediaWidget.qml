@@ -3,19 +3,46 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Services.Mpris
+import Qt5Compat.GraphicalEffects
 
 Rectangle {
   id: widgetRoot
-  width: 340 
+  width: 340
   height: 160
-  color: "#1e1e2e" 
-  radius: 12
-  border.color: "#313244" 
+  radius: 16
+  border.color: "#313244"
   border.width: 1
 
+  gradient: Gradient {
+    GradientStop { position: 0.0; color: "#1e1e2e" }
+    GradientStop { position: 1.0; color: "#181825" }
+  }
 
-  property int playerCount: Mpris.players.values.length
-  property var player: playerCount > 0 ? Mpris.players.values[0] : null
+  layer.enabled: true
+  layer.effect: DropShadow {
+    transparentBorder: true
+    horizontalOffset: 0
+    verticalOffset: 8
+    radius: 22
+    samples: 45
+    color: "#80000000"
+  }
+
+
+  // Só considera players do Spotify (ex: ignora abas do YouTube no navegador)
+  property var player: {
+    let players = Mpris.players.values;
+    for (let i = 0; i < players.length; i++) {
+      let p = players[i];
+      let identity = (p.identity || "").toLowerCase();
+      let dbusName = (p.dbusName || "").toLowerCase();
+      let desktopEntry = (p.desktopEntry || "").toLowerCase();
+      if (identity.includes("spotify") || dbusName.includes("spotify") || desktopEntry.includes("spotify")) {
+        return p;
+      }
+    }
+    return null;
+  }
 
 
   property bool isPlaying: {
@@ -35,9 +62,9 @@ Rectangle {
       Rectangle {
 	Layout.preferredWidth: 64
 	Layout.preferredHeight: 64
-	radius: 8
-	color: "#181825" 
-	clip: true 
+	radius: 12
+	color: "#181825"
+	clip: true
 
 	Image {
 	  anchors.fill: parent
@@ -76,7 +103,7 @@ Rectangle {
 	  text: {
 	    if (!widgetRoot.player) return "...";
 	    if (widgetRoot.player.trackArtists && widgetRoot.player.trackArtists.length > 0) {
-	      return widgetRoot.player.trackArtists.join(", ");
+	      return Array.isArray(widgetRoot.player.trackArtists) ? widgetRoot.player.trackArtists.join(", ") : String(widgetRoot.player.trackArtists);
 	    }
 	    return widgetRoot.player.identity || "Unknown Artist";
 	  }
@@ -98,6 +125,35 @@ Rectangle {
       value: widgetRoot.player ? widgetRoot.player.position : 0
 
       onMoved: if (widgetRoot.player) widgetRoot.player.position = value
+
+      background: Rectangle {
+	x: timeline.leftPadding
+	y: timeline.topPadding + timeline.availableHeight / 2 - height / 2
+	width: timeline.availableWidth
+	height: 4
+	radius: 2
+	color: "#313244"
+
+	Rectangle {
+	  width: timeline.visualPosition * parent.width
+	  height: parent.height
+	  radius: 2
+	  color: "#89b4fa"
+	}
+      }
+
+      handle: Rectangle {
+	x: timeline.leftPadding + timeline.visualPosition * (timeline.availableWidth - width)
+	y: timeline.topPadding + timeline.availableHeight / 2 - height / 2
+	width: 12
+	height: 12
+	radius: 6
+	color: "#cdd6f4"
+	border.color: "#89b4fa"
+	border.width: timeline.pressed ? 2 : 0
+	scale: timeline.pressed ? 1.15 : 1.0
+	Behavior on scale { NumberAnimation { duration: 100 } }
+      }
     }
 
     RowLayout {
@@ -106,24 +162,47 @@ Rectangle {
 
       Text {
 	text: "󰒮"
-	color: "#cdd6f4" 
+	color: prevArea.containsMouse ? "#89b4fa" : "#cdd6f4"
 	font.pixelSize: 20
+	scale: prevArea.pressed ? 0.88 : 1.0
+	Behavior on color { ColorAnimation { duration: 120 } }
+	Behavior on scale { NumberAnimation { duration: 100 } }
 	MouseArea {
-	  anchors.fill: parent; cursorShape: Qt.PointingHandCursor
+	  id: prevArea
+	  anchors.fill: parent
+	  anchors.margins: -6
+	  hoverEnabled: true
+	  cursorShape: Qt.PointingHandCursor
 	  onClicked: if(widgetRoot.player) widgetRoot.player.previous()
 	}
       }
 
-      Text {
+      Rectangle {
+	Layout.preferredWidth: 40
+	Layout.preferredHeight: 40
+	radius: 20
+	color: playArea.containsMouse ? "#313244" : "#181825"
+	border.color: "#89b4fa"
+	border.width: 1
+	scale: playArea.pressed ? 0.92 : 1.0
+	Behavior on color { ColorAnimation { duration: 120 } }
+	Behavior on scale { NumberAnimation { duration: 100 } }
 
-	text: widgetRoot.isPlaying ? "󰏤" : "󰐊" 
-	color: "#89b4fa" 
-	font.pixelSize: 24
+	Text {
+	  anchors.centerIn: parent
+	  anchors.horizontalCenterOffset: widgetRoot.isPlaying ? 0 : 1
+	  text: widgetRoot.isPlaying ? "󰏤" : "󰐊"
+	  color: "#89b4fa"
+	  font.pixelSize: 20
+	}
+
 	MouseArea {
-	  anchors.fill: parent; cursorShape: Qt.PointingHandCursor
+	  id: playArea
+	  anchors.fill: parent
+	  hoverEnabled: true
+	  cursorShape: Qt.PointingHandCursor
 	  onClicked: {
 	    if(widgetRoot.player) {
- 
 	      if (widgetRoot.isPlaying) {
 		widgetRoot.player.pause();
 	      } else {
@@ -136,10 +215,17 @@ Rectangle {
 
       Text {
 	text: "󰒭"
-	color: "#cdd6f4" 
+	color: nextArea.containsMouse ? "#89b4fa" : "#cdd6f4"
 	font.pixelSize: 20
+	scale: nextArea.pressed ? 0.88 : 1.0
+	Behavior on color { ColorAnimation { duration: 120 } }
+	Behavior on scale { NumberAnimation { duration: 100 } }
 	MouseArea {
-	  anchors.fill: parent; cursorShape: Qt.PointingHandCursor
+	  id: nextArea
+	  anchors.fill: parent
+	  anchors.margins: -6
+	  hoverEnabled: true
+	  cursorShape: Qt.PointingHandCursor
 	  onClicked: if(widgetRoot.player) widgetRoot.player.next()
 	}
       }
@@ -150,12 +236,38 @@ Rectangle {
 	spacing: 8
 	Text { text: "󰕾"; color: "#cdd6f4"; font.pixelSize: 16 }
 	Slider {
+	  id: volSlider
 	  width: 80
 	  enabled: widgetRoot.player !== null
 	  from: 0
 	  to: 1
 	  value: widgetRoot.player ? widgetRoot.player.volume : 0
 	  onMoved: if(widgetRoot.player) widgetRoot.player.volume = value
+
+	  background: Rectangle {
+	    x: volSlider.leftPadding
+	    y: volSlider.topPadding + volSlider.availableHeight / 2 - height / 2
+	    width: volSlider.availableWidth
+	    height: 4
+	    radius: 2
+	    color: "#313244"
+
+	    Rectangle {
+	      width: volSlider.visualPosition * parent.width
+	      height: parent.height
+	      radius: 2
+	      color: "#89b4fa"
+	    }
+	  }
+
+	  handle: Rectangle {
+	    x: volSlider.leftPadding + volSlider.visualPosition * (volSlider.availableWidth - width)
+	    y: volSlider.topPadding + volSlider.availableHeight / 2 - height / 2
+	    width: 10
+	    height: 10
+	    radius: 5
+	    color: "#cdd6f4"
+	  }
 	}
       }
     }

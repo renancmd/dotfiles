@@ -4,16 +4,31 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell.Hyprland
 import Quickshell
-import Qt.labs.folderlistmodel 
+import Qt.labs.folderlistmodel
+import Qt5Compat.GraphicalEffects
 
 Rectangle {
   id: launcherRoot
   width: 450
   height: 500
-  color: "#1e1e2e" 
-  radius: 12
+  radius: 18
   border.color: "#313244"
   border.width: 1
+
+  gradient: Gradient {
+    GradientStop { position: 0.0; color: "#1e1e2e" }
+    GradientStop { position: 1.0; color: "#17171f" }
+  }
+
+  layer.enabled: true
+  layer.effect: DropShadow {
+    transparentBorder: true
+    horizontalOffset: 0
+    verticalOffset: 10
+    radius: 28
+    samples: 57
+    color: "#90000000"
+  }
 
   signal closeRequested()
 
@@ -49,10 +64,13 @@ Rectangle {
 
 	Layout.fillWidth: true
 	height: 36
-	radius: 6
-	color: isActive ? "#313244" : "transparent"
+	radius: 8
+	color: isActive ? "#313244" : (secHover.containsMouse ? "#232336" : "transparent")
 	border.color: isActive ? "#89b4fa" : "transparent"
 	border.width: 1
+
+	Behavior on color { ColorAnimation { duration: 150 } }
+	Behavior on border.color { ColorAnimation { duration: 150 } }
 
 	Row {
 	  anchors.centerIn: parent
@@ -74,7 +92,9 @@ Rectangle {
 	}
 
 	MouseArea {
+	  id: secHover
 	  anchors.fill: parent
+	  hoverEnabled: true
 	  cursorShape: Qt.PointingHandCursor
 	  onClicked: {
 	    launcherRoot.activeSection = secBtn.sectionIndex;
@@ -83,9 +103,8 @@ Rectangle {
 	}
       }
 
-      SectionButton { iconText: "󰖟"; title: "Web"; sectionIndex: 0 }
-      SectionButton { iconText: "󰣆"; title: "Apps"; sectionIndex: 1 }
-      SectionButton { iconText: "󰸉"; title: "Wallpapers"; sectionIndex: 2 }
+      SectionButton { iconText: "󰣆"; title: "Apps"; sectionIndex: 0 }
+      SectionButton { iconText: "󰸉"; title: "Wallpapers"; sectionIndex: 1 }
     }
 
     // 2. Search Bar
@@ -93,9 +112,11 @@ Rectangle {
       Layout.fillWidth: true
       height: 44
       color: "#181825"
-      radius: 8
-      border.color: "#45475a"
-      border.width: searchInput.activeFocus ? 1 : 0
+      radius: 10
+      border.color: searchInput.activeFocus ? "#89b4fa" : "#313244"
+      border.width: 1
+
+      Behavior on border.color { ColorAnimation { duration: 150 } }
 
       RowLayout {
 	anchors.fill: parent
@@ -124,18 +145,7 @@ Rectangle {
 	  Keys.onEscapePressed: launcherRoot.closeRequested()
 
 	  onAccepted: {
-	    let query = text.trim();
 	    if (launcherRoot.activeSection === 0) {
-	      if (query === "") return;
-	      let url = query;
-	      if (!url.startsWith("http://") && !url.startsWith("https://")) {
-		url = "https://www.google.com/search?q=" + encodeURIComponent(query);
-	      }
-	      Qt.openUrlExternally(url);
-	      searchInput.text = "";
-	      launcherRoot.closeRequested();
-	    } 
-	    else if (launcherRoot.activeSection === 1) {
 	      if (appsList.count > 0) {
 		let firstApp = appsList.model.values[0];
 		firstApp.execute();
@@ -153,26 +163,17 @@ Rectangle {
       Layout.fillWidth: true
       Layout.fillHeight: true
       color: "#181825"
-      radius: 8
+      radius: 10
 
       Item {
 	anchors.fill: parent
 	anchors.margins: 12
 
-	// --- TAB 0: WEB ---
-	Text {
-	  anchors.centerIn: parent
-	  color: "#a6adc8"
-	  font.pixelSize: 14
-	  visible: launcherRoot.activeSection === 0
-	  text: "Type above and press Enter to search the web."
-	}
-
-	// --- TAB 1: APPS ---
+	// --- TAB 0: APPS ---
 	ListView {
 	  id: appsList
 	  anchors.fill: parent
-	  visible: launcherRoot.activeSection === 1
+	  visible: launcherRoot.activeSection === 0
 	  clip: true
 	  spacing: 4
 
@@ -193,7 +194,9 @@ Rectangle {
 	  width: ListView.view.width
 	  height: 48
 	  color: hoverArea.containsMouse ? "#313244" : "transparent"
-	  radius: 6
+	  radius: 8
+
+	  Behavior on color { ColorAnimation { duration: 120 } }
 
 	  RowLayout {
 	    anchors.fill: parent
@@ -242,11 +245,11 @@ Rectangle {
 	}
       }
 
-      // --- TAB 2: WALLPAPERS ---
+      // --- TAB 1: WALLPAPERS ---
       GridView {
 	id: wallpaperGrid
 	anchors.fill: parent
-	visible: launcherRoot.activeSection === 2
+	visible: launcherRoot.activeSection === 1
 	clip: true
 
 	cellWidth: width / 3
@@ -254,7 +257,7 @@ Rectangle {
 
 	model: FolderListModel {
 	  folder: Qt.resolvedUrl("../assets") 
-	  nameFilters: ["*.png", "*.jpg", "*.jpeg"]
+	  nameFilters: ["*.png", "*.jpg", "*.jpeg", "*.gif"]
 	  showDirs: false
 	}
 
@@ -264,18 +267,22 @@ Rectangle {
 
 	  Rectangle {
 	    anchors.fill: parent
-	    anchors.margins: 4 
+	    anchors.margins: 4
 	    color: "transparent"
-	    radius: 8
+	    radius: 10
 	    border.color: hoverAreaWall.containsMouse ? "#89b4fa" : "transparent"
 	    border.width: 2
 	    clip: true
+	    scale: hoverAreaWall.containsMouse ? 1.03 : 1.0
+
+	    Behavior on border.color { ColorAnimation { duration: 150 } }
+	    Behavior on scale { NumberAnimation { duration: 150; easing.type: Easing.OutCubic } }
 
 	    Image {
 	      anchors.fill: parent
 	      anchors.margins: 2
-	      source: fileUrl 
-	      fillMode: Image.PreserveAspectCrop 
+	      source: fileUrl
+	      fillMode: Image.PreserveAspectCrop
 	    }
 
 	    MouseArea {
@@ -285,7 +292,7 @@ Rectangle {
 	      cursorShape: Qt.PointingHandCursor
 	      onClicked: {
 		let wallPath = String(filePath);
-		let cmd = "sh -c 'swww img \"" + wallPath + "\" --transition-type grow --transition-pos 0.5,0.5 --transition-duration 1 && wal -i \"" + wallPath + "\" -n -q && qs ipc call theme reload'";
+		let cmd = "sh -c 'awww img \"" + wallPath + "\" --transition-type grow --transition-pos 0.5,0.5 --transition-duration 1 && wal -i \"" + wallPath + "\" -n -q && qs ipc call theme reload'";
 		Hyprland.dispatch("exec " + cmd);
 		launcherRoot.closeRequested();
 	      }

@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
+import Qt5Compat.GraphicalEffects
 
 import "components"
 import "services"
@@ -25,20 +26,50 @@ ShellRoot {
             left: true
             right: true
         }
-        height: 36
+        margins {
+            top: 8
+            left: 14
+            right: 14
+        }
+        height: 42
         color: "transparent"
 
-        Rectangle {
-            id: bar
-            anchors.fill: parent
-            color: "#111318"
+        // Componente reutilizável: fundo "cápsula" próprio de cada grupo (esquerda/centro/direita)
+        component Capsule: Rectangle {
+            radius: 14
+            border.color: "#313244"
+            border.width: 1
 
-            RowLayout {
-                anchors.fill: parent
-                anchors.margins: 8
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: "#1e1e2e" }
+                GradientStop { position: 1.0; color: "#17171f" }
+            }
+
+            layer.enabled: true
+            layer.effect: DropShadow {
+                transparentBorder: true
+                horizontalOffset: 0
+                verticalOffset: 4
+                radius: 14
+                samples: 29
+                color: "#70000000"
+            }
+        }
+
+        Item {
+            anchors.fill: parent
+
+            // ===================== GRUPO ESQUERDA =====================
+            Capsule {
+                height: parent.height
+                width: leftGroup.implicitWidth + 28
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
 
                 RowLayout {
-                    spacing: 12
+                    id: leftGroup
+                    anchors.centerIn: parent
+                    spacing: 14
 
                     ArchIcon {
                         Layout.alignment: Qt.AlignVCenter
@@ -48,24 +79,45 @@ ShellRoot {
                         Layout.alignment: Qt.AlignVCenter
                     }
 
+                    Rectangle {
+                        Layout.preferredWidth: 1
+                        Layout.fillHeight: true
+                        Layout.topMargin: 4
+                        Layout.bottomMargin: 4
+                        color: "#313244"
+                    }
+
                     MediaComponent {
                         id: mediaButton
                         Layout.alignment: Qt.AlignVCenter
                         onClicked: mediaPopup.visible = !mediaPopup.visible
                     }
                 }
+            }
 
-                Item {
-                    Layout.fillWidth: true
+            // ===================== GRUPO CENTRO =====================
+            Capsule {
+                height: parent.height
+                width: centerGroup.implicitWidth + 28
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+
+                Workspaces {
+                    id: centerGroup
+                    anchors.centerIn: parent
                 }
+            }
 
-                Workspaces {}
-
-                Item {
-                    Layout.fillWidth: true
-                }
+            // ===================== GRUPO DIREITA =====================
+            Capsule {
+                height: parent.height
+                width: rightGroup.implicitWidth + 28
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
 
                 RowLayout {
+                    id: rightGroup
+                    anchors.centerIn: parent
                     spacing: 12
 
                     RowLayout {
@@ -76,6 +128,14 @@ ShellRoot {
                         VolumeIcon {
                             Layout.alignment: Qt.AlignVCenter
                         }
+                    }
+
+                    Rectangle {
+                        Layout.preferredWidth: 1
+                        Layout.fillHeight: true
+                        Layout.topMargin: 4
+                        Layout.bottomMargin: 4
+                        color: "#313244"
                     }
 
                     MenuIcon {
@@ -99,6 +159,7 @@ ShellRoot {
             item: menuButton
             edges: Edges.Bottom | Edges.Left
             gravity: Edges.Bottom | Edges.Right
+            margins.top: 10
         }
 
         // Puxa o foco assim que a janela se torna visível
@@ -126,6 +187,7 @@ ShellRoot {
             item: mediaButton
             edges: Edges.Bottom | Edges.Left
             gravity: Edges.Bottom | Edges.Right
+            margins.top: 10
         }
 
         MediaWidget {
@@ -150,7 +212,7 @@ ShellRoot {
 
         Rectangle {
             anchors.fill: parent
-            color: "#80000000"
+            color: "#9c000000"
 
             MouseArea {
                 anchors.fill: parent

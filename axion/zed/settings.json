@@ -1,5 +1,7 @@
 {
     // --- UI & Theme ---
+    "cli_default_open_behavior": "existing_window",
+    "icon_theme": "Material Icon Theme",
     "use_system_path_prompts": false,
     "vim_mode": false,
     "theme": "Tokyo Night",
@@ -9,8 +11,8 @@
         "editor.background": "#00000030",
         "tab_bar.background": "#00000030",
     },
-    "ui_font_size": 17,
-    "buffer_font_size": 17,
+    "ui_font_size": 14,
+    "buffer_font_size": 14,
 
     // Clean UI
     "scrollbar": {
